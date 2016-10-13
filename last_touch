@@ -6,6 +6,8 @@ load 'tuple.rb'
 $ignore = (`git ls-files --others`).split('\n')
 #a hash that maps a file to tuple that store a commit's information
 $map = Hash.new
+#an array that stores the time
+$time = Array.new
 #the longest word in maps
 $longest = 0
 
@@ -35,16 +37,22 @@ def parse(file)
   info.changeDate(`git log -1 --pretty=format:%cI #{file}`)
   info.changeAuthor(`git log -1 --pretty=format:%an #{file}`)
   info.changeCommit(`git log -1 --pretty=format:%h #{file}`)
+
+  $time.push(info.getDate)
   $map.store(file, info)
 end
 
 #print hash
 def print_hash
-  $map.each do |key, value|
-    if(!(key.nil? || value.nil?))
-      puts "#{value.getDate} [#{value.getCommit}]: #{key}" +
-            " " * ($longest - key.length + 1) +
-            "(#{value.getAuthor})"
+  $time.sort!.uniq!.reverse!
+
+  $time.each do |date|
+    $map.each do |file, tuple|
+      if tuple.getDate.eql? date
+        puts "#{date} [#{tuple.getCommit}]: #{file}" +
+              " " * ($longest - file.length + 1) +
+              "(#{tuple.getAuthor})"
+      end
     end
   end
 end
