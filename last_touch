@@ -2,7 +2,6 @@
 
 #include the tuple class
 load 'tuple.rb'
-require 'date'
 
 $ignore = (`git ls-files --others`).split('\n')
 #a hash that maps a file to tuple that store a commit's information
@@ -32,30 +31,10 @@ def traverse(start)
 end
 
 def parse(file)
-  commit = `git log #{file}`
-  lines = commit.split("\n")
   info = Tuple.new
-
-  lines.each do |w|
-    first = w.split.first
-    words = w.split.drop(1)
-
-    if !words.last.nil? && (words.last.include? "<")
-      words = words.take(words.length - 1)
-    end
-    next_value = words.join(' ')
-
-    if first.eql? "commit"
-      info.changeCommit(next_value[0..5])
-    elsif first.eql? 'Author:'
-      info.changeAuthor(next_value)
-    elsif first.eql? 'Date:'
-      #when there is a time value, push the tuple to the array of commits
-      #and make info a new tuple
-      info.changeDate(DateTime.parse(next_value))
-    end
-  end
-
+  info.changeDate(`git log -1 --pretty=format:%cI #{file}`)
+  info.changeAuthor(`git log -1 --pretty=format:%an #{file}`)
+  info.changeCommit(`git log -1 --pretty=format:%h #{file}`)
   $map.store(file, info)
 end
 
@@ -79,8 +58,6 @@ else
     target_path = target_path + "/" + ARGV[0]
   end
 
-  puts target_path
   traverse(target_path)
-
   print_hash
 end
