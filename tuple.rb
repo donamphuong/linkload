@@ -35,4 +35,9 @@ class Tuple
       puts @commit + " " + @author + " " + @date
     end
   end
+  
+  #returns true when x is bigger than y
+  def compare(x, y)
+    return x.getDate > y.getDate
+  end
 end
