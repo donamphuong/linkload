@@ -12,12 +12,13 @@ $longest = 0
 def traverse(start)
   Dir.foreach(start) do |x|
     path = File.join(start, x)
+    puts x
 
     if(x == '.' || x == '..')
       next
-    elsif File.file?(path) 
+    elsif File.file?(path)
       if File.readable?(x)
-  	$longest = $longest < x.length ? x.length : $longest
+  	    $longest = $longest < x.length ? x.length : $longest
         parse(x)
       end
     else
@@ -30,15 +31,15 @@ def parse(file)
   commit = `git log #{file}`
   lines = commit.split("\n")
   info = Tuple.new
-  
+
   lines.each do |w|
     first = w.split.first
     words = w.split.drop(1)
-    
-    if !words.last.nil? && (words.last.include? "<") 
+
+    if !words.last.nil? && (words.last.include? "<")
       words = words.take(words.length - 1)
     end
-    next_value = words.join(' ') 
+    next_value = words.join(' ')
 
     if first.eql? "commit"
       info.changeCommit(next_value[0..5])
@@ -50,7 +51,7 @@ def parse(file)
       info.changeDate(DateTime.parse(next_value))
     end
   end
-  
+
   $map.store(file, info)
 end
 
@@ -76,6 +77,6 @@ else
 
   puts target_path
   traverse(target_path)
-  
+
   print_hash
 end
