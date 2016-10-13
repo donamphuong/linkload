@@ -4,6 +4,7 @@
 load 'tuple.rb'
 require 'date'
 
+$ignore = (`git ls-files --others`).split('\n')
 #a hash that maps a file to tuple that store a commit's information
 $map = Hash.new
 #the longest word in maps
@@ -17,9 +18,12 @@ def traverse(start)
       next
     elsif File.file?(path)
       if File.readable?(x)
-  	    $longest = $longest < x.length ? x.length : $longest
-        #puts x
-        parse(x)
+        if (!$ignore.include? "#{x}\n")
+  	       $longest = $longest < x.length ? x.length : $longest
+           parse(x)
+        elsif
+          puts "[***not under version control***]: #{x}"
+        end
       end
     else
       traverse(path)
@@ -29,7 +33,6 @@ end
 
 def parse(file)
   commit = `git log #{file}`
-  puts commit
   lines = commit.split("\n")
   info = Tuple.new
 
