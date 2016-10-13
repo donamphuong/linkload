@@ -12,13 +12,13 @@ $longest = 0
 def traverse(start)
   Dir.foreach(start) do |x|
     path = File.join(start, x)
-    puts x
 
     if(x == '.' || x == '..')
       next
     elsif File.file?(path)
       if File.readable?(x)
   	    $longest = $longest < x.length ? x.length : $longest
+        puts x
         parse(x)
       end
     else
