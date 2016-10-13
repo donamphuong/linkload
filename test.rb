@@ -18,7 +18,12 @@ def parse(commits)
   #push the respective values into a tuple (commit, author, date)
   lines.each do |w|
     first = w.split.first
-    next_value = w.split.drop(1).join(' ')
+    words = w.split.drop(1)
+    
+    if !words.last.nil? && (words.last.include? "<") 
+      words = words.take(words.length - 1)
+    end
+    next_value = words.join(' ') 
 
     if first.eql? "commit"
       info.changeCommit(next_value[0..5])
@@ -61,11 +66,10 @@ def print_hash
   for i in 0..$map.length
     key = $map.keys[i]
     value = $map.values[i]
-    #puts key.length
 
     if(!(key.nil? || value.nil?))
       puts "#{value.getDate} [#{value.getCommit}]: #{key}" +
-            " " * padding +
+            " " * ($longest - key.length) +
             "(#{value.getAuthor})"
     end
   end
