@@ -15,14 +15,14 @@ How many relocation records are there in the file hello.o?
 Name them and explain how you arrived at your answer.
 
 Answer:
-
+There is only one relocation record in the hello.o. This is because in the original file, there is only one label where the address is unknown. I have done this by comparing the original file hello.s, which is necessary because when examining the disassemble hello.o, I noticed two 0 addresses. 
 
 Question 3:
 How many relocation records are there in the file hello (the result of linking hello.o)?
 Explain how you arrived at your answer. 
 
 Answer:
-
+There should be no relocation record left in the file hello. By using linker ld, all the relocation records in the program should be resolved. Looking at hello, I can see that the 3rd line mov $0x0,%ecx has changed to mov $0x40009a,%ecx
 
 Question 4:
 What happens if you try to link chello.o using ld as you did with hello.o 
@@ -30,7 +30,7 @@ What happens if you try to link chello.o using ld as you did with hello.o
 Explain what has happened and how the nm utility can be used to confirm this.
 
 Answer:
-
+When I tried to link chello.o using ld, the relocation record
  
 Question 5:
 The last instruction in hello.s is an exit system call. 
