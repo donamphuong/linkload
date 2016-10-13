@@ -59,7 +59,7 @@ def print_hash
   $map.each do |key, value|
     if(!(key.nil? || value.nil?))
       puts "#{value.getDate} [#{value.getCommit}]: #{key}" +
-            " " * ($longest - key.length) +
+            " " * ($longest - key.length + 1) +
             "(#{value.getAuthor})"
     end
   end
@@ -69,7 +69,12 @@ if(ARGV.length > 1)
   puts "There can only be one directory"
   exit 1
 else
-  target_path = ARGV.empty? ? Dir.pwd : ARGV[0]
+  target_path = Dir.pwd
+  if !ARGV.empty?
+    target_path = target_path + "/" + ARGV[0]
+  end
+
+  puts target_path
   traverse(target_path)
   
   print_hash
