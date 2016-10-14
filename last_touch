@@ -11,18 +11,19 @@ $time = Array.new
 #the longest word in maps
 $longest = 0
 
+#if ignore is 1 then ignore all git files
 def traverse(start)
   if Dir.exist?(start)
     Dir.foreach(start) do |x|
       path = File.join(start, x)
-      #puts x + " #{File.exist?(path)}"
+      #puts x
 
       if(x == '.' || x == '..')
         next
-      elsif File.file?(path) && File.exist?(path)
+      elsif File.file?(path) && File.readable?(x)
         if (!$ignore.include? "#{x}\n")
            Dir.chdir(start)
-  	       $longest = $longest < x.length ? x.length : $longest
+  	   $longest = $longest < x.length ? x.length : $longest
            parse(x)
         else
           puts "[***not under version control***]: #{x}"
@@ -38,7 +39,7 @@ def parse(file)
   info = Tuple.new
   info.changeDate(`git log -1 --pretty=format:%cI #{file}`)
   info.changeAuthor(`git log -1 --pretty=format:%an #{file}`)
-  info.changeCommit(`git log -1 --pretty=format:%h #{file}`)
+  info.changeCommit(`git log -1 --pretty=format:%h #{file}`[0, 4])
 
   $time.push(info.getDate)
   $map.store(file, info)
