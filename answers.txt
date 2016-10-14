@@ -30,7 +30,7 @@ What happens if you try to link chello.o using ld as you did with hello.o
 Explain what has happened and how the nm utility can be used to confirm this.
 
 Answer:
-When I tried to link chello.o using ld, the relocation record
+When I tried to link chello.o using ld, the relocation record is not mapped to an address. I could confirm this by using nm chello.o, there are two more symbolsin chello.o, writeA and exitA, where message(the label) is inside them. This ledto writeA and exitA being relocated and message being ignored
  
 Question 5:
 The last instruction in hello.s is an exit system call. 
@@ -39,6 +39,4 @@ What would happen if you assembled, linked and ran this programs with this instr
 Explain why this happens. Does the program still terminate?
 
 Answer:
-
-
- 
+There is a segmentation fault and the program does not terminate. The program keeps looking for instruction in the memory that it shouldn't access leading to segmentation fault 

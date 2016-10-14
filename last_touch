@@ -54,12 +54,15 @@ def traverse(start, folder)
       	next
       elsif files.include?(x)
   	$longest = $longest < x.length + folder.length ? x.length + folder.length : $longest
+  	if folder.length > 1
+  	  $longest = $longest + 1
+  	end
         parse(x, folder)
       elsif File.directory?(x) && x != ".git"
         traverse(path, x)
         Dir.chdir(start)
       elsif ignore.include? "#{x}"
-        $not_control.push(folder != "" ? folder + "/" + x + " " : x)
+        $not_control.push(folder != "" ? folder + "/" + x : x)
       end
     end
   end
