@@ -1,4 +1,5 @@
-# edit this file to build/clean chello as required for quesiton 6
+
+#edit this file to build/clean chello as required for quesiton 6
 all: chello
 
 chello: chello.o writeexit.o
@@ -10,3 +11,5 @@ writeexit.o: writeexit.s
 clean:
 	rm -rf *.o chello
 .PHONY: all clean
+
+
