@@ -15,13 +15,14 @@ def traverse(start)
   if Dir.exist?(start)
     Dir.foreach(start) do |x|
       path = File.join(start, x)
+      #puts x + " #{File.exist?(path)}"
 
       if(x == '.' || x == '..')
         next
-      elsif File.file?(path) && File.readable?(x)
+      elsif File.file?(path) && File.exist?(path)
         if (!$ignore.include? "#{x}\n")
-  	       $longest = $longest < x.length ? x.length : $longest
            Dir.chdir(start)
+  	       $longest = $longest < x.length ? x.length : $longest
            parse(x)
         else
           puts "[***not under version control***]: #{x}"
@@ -59,15 +60,15 @@ def print_hash
     end
 end
 
-if(ARGV.length > 1)
-  puts "There can only be one directory"
+target_path = Dir.pwd
+if !ARGV.empty?
+  target_path = target_path + "/" + ARGV[0]
+end
+
+if(ARGV.length > 1 || !Dir.exist?(target_path))
+  puts "Invalid path"
   exit 1
 else
-  target_path = Dir.pwd
-  if !ARGV.empty?
-    target_path = target_path + "/" + ARGV[0]
-  end
-
   traverse(target_path)
   print_hash
 end
