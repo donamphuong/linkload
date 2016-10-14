@@ -12,23 +12,23 @@ $time = Array.new
 $longest = 0
 
 def traverse(start)
-  Dir.chdir(start)
-  Dir.foreach(start) do |x|
-    path = File.join(start, x)
+  if Dir.exist?(start)
+    Dir.foreach(start) do |x|
+      path = File.join(start, x)
 
-    if(x == '.' || x == '..')
-      next
-    elsif File.file?(path)
-      if File.readable?(x)
+      if(x == '.' || x == '..')
+        next
+      elsif File.file?(path) && File.readable?(x)
         if (!$ignore.include? "#{x}\n")
   	       $longest = $longest < x.length ? x.length : $longest
+           Dir.chdir(start)
            parse(x)
-        elsif
+        else
           puts "[***not under version control***]: #{x}"
         end
+      else
+        traverse(path)
       end
-    else
-      traverse(path)
     end
   end
 end
