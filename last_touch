@@ -11,7 +11,7 @@ $time = Array.new
 $longest = 0
 
 #if ignore is 1 then ignore all git files
-def traverse(start)
+def traverse(start, folder)
   if Dir.exist?(start)
     Dir.chdir(start)
     files = `git ls-files`.split("\n")
@@ -25,23 +25,24 @@ def traverse(start)
       elsif File.file?(x) 
         if files.include? x
   	   $longest = $longest < x.length ? x.length : $longest
-           parse(x)
+           parse(x, folder)
         elsif ignore.include? "#{x}\n"
           puts "[***not under version control***]: #{x}"
         end
       elsif File.directory?(x) && x != ".git"
-      	puts x
-        traverse(path)
+        traverse(path, x)
       end
     end
   end
 end
 
-def parse(file)
+def parse(file, folder)
   info = Tuple.new
   info.changeDate(`git log -1 --pretty=format:%cI #{file}`)
   info.changeAuthor(`git log -1 --pretty=format:%an #{file}`)
-  info.changeCommit(`git log -1 --pretty=format:%h #{file}`[0, 4])
+  info.changeCommit(`git log -1 --pretty=format:%h #{file}`[0, 5])
+ 
+  file = folder != "" ? folder + "/" + file : file
 
   $time.push(info.getDate)
   $map.store(file, info)
@@ -72,6 +73,6 @@ if(ARGV.length > 1 || !Dir.exist?(target_path))
   puts "Invalid path"
   exit 1
 else
-  traverse(target_path)
+  traverse(target_path, "")
   print_hash
 end
