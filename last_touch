@@ -3,7 +3,6 @@
 #include the tuple class
 load 'tuple.rb'
 
-$ignore = (`git ls-files --others`).split('\n')
 #a hash that maps a file to tuple that store a commit's information
 $map = Hash.new
 #an array that stores the time
@@ -14,21 +13,24 @@ $longest = 0
 #if ignore is 1 then ignore all git files
 def traverse(start)
   if Dir.exist?(start)
+    Dir.chdir(start)
+    files = `git ls-files`.split("\n")
+    ignore = (`git ls-files --others`).split('\n')
+  
     Dir.foreach(start) do |x|
       path = File.join(start, x)
-      #puts x
-
-      if(x == '.' || x == '..')
-        next
-      elsif File.file?(path) && File.readable?(x)
-        if (!$ignore.include? "#{x}\n")
-           Dir.chdir(start)
+      
+      if x == "." || x == ".."
+      	next
+      elsif File.file?(x) 
+        if files.include? x
   	   $longest = $longest < x.length ? x.length : $longest
            parse(x)
-        else
+        elsif ignore.include? "#{x}\n"
           puts "[***not under version control***]: #{x}"
         end
-      else
+      elsif File.directory?(x) && x != ".git"
+      	puts x
         traverse(path)
       end
     end
