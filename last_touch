@@ -1,7 +1,7 @@
 #!/usr/bin/ruby
 
 #include the tuple class
-load 'tuple.rb'
+load './tuple.rb'
 
 #a hash that maps a file to tuple that store a commit's information
 $map = Hash.new
@@ -15,7 +15,7 @@ def traverse(start, folder)
   if Dir.exist?(start)
     Dir.chdir(start)
     files = `git ls-files`.split("\n")
-    ignore = (`git ls-files --others`).split('\n')
+    ignore = `git ls-files --others`.split("\n")
   
     Dir.foreach(start) do |x|
       path = File.join(start, x)
@@ -26,7 +26,7 @@ def traverse(start, folder)
         if files.include? x
   	   $longest = $longest < x.length ? x.length : $longest
            parse(x, folder)
-        elsif ignore.include? "#{x}\n"
+        elsif ignore.include? "#{x}"
           puts "[***not under version control***]: #{x}"
         end
       elsif File.directory?(x) && x != ".git"
