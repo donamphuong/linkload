@@ -67,9 +67,9 @@ end
 
 def parse(file, folder)
   info = Tuple.new
-  info.changeDate(`git log -1 --pretty=format:%cI #{file}`)
-  info.changeAuthor(`git log -1 --pretty=format:%an #{file}`)
-  info.changeCommit(`git log -1 --pretty=format:%h #{file}`[0, 5])
+  info.changeDate(`git log -1 --no-merges --pretty=format:%cI #{file}`)
+  info.changeAuthor(`git log -1 --no-merges --pretty=format:%an #{file}`)
+  info.changeCommit(`git log -1 --no-merges --pretty=format:%h #{file}`[0, 5])
  
   file = folder != "" ? folder + "/" + file : file
 
