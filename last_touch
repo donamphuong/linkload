@@ -1,7 +1,36 @@
 #!/usr/bin/ruby
 
-#include the tuple class
-load './tuple.rb'
+class Tuple
+  def intialize(commit, author, date)
+    @commit = commit
+    @author = author
+    @date = date
+  end
+
+  def changeCommit(commit)
+    @commit = commit
+  end
+
+  def changeAuthor(author)
+    @author = author
+  end
+
+  def changeDate(date)
+    @date = date
+  end
+
+  def getCommit
+    return @commit
+  end
+
+  def getAuthor
+    return @author
+  end
+
+  def getDate
+    return @date
+  end
+end
 
 #a hash that maps a file to tuple that store a commit's information
 $map = Hash.new
@@ -24,7 +53,7 @@ def traverse(start, folder)
       	next
       elsif File.file?(x) 
         if files.include? x
-  	   $longest = $longest < x.length ? x.length : $longest
+  	   $longest = $longest < x.length + folder.length ? x.length + folder.length : $longest
            parse(x, folder)
         elsif ignore.include? "#{x}"
           puts "[***not under version control***]: #{x}"
