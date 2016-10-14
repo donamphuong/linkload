@@ -66,6 +66,7 @@ else
     target_path = target_path + "/" + ARGV[0]
   end
 
+  system("cd #{target_path}")
   traverse(target_path)
   print_hash
 end

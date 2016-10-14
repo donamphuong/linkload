@@ -1,5 +1,5 @@
 # edit this file to build/clean chello as required for quesiton 6
-all: chello writeexit
+main: chellomain writeexitmain
 chellomain: chello.c
 		gcc -c chello.c -o chello.o
 		ld -N chello.o writeexit.o -o chello
