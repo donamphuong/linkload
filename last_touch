@@ -12,6 +12,7 @@ $time = Array.new
 $longest = 0
 
 def traverse(start)
+  Dir.chdir(start)
   Dir.foreach(start) do |x|
     path = File.join(start, x)
 
@@ -44,17 +45,18 @@ end
 
 #print hash
 def print_hash
-  $time.sort!.uniq!.reverse!
+    $time.sort!.uniq!
+    $time.reverse!
 
-  $time.each do |date|
-    $map.each do |file, tuple|
-      if tuple.getDate.eql? date
-        puts "#{date} [#{tuple.getCommit}]: #{file}" +
-              " " * ($longest - file.length + 1) +
-              "(#{tuple.getAuthor})"
+    $time.each do |date|
+      $map.each do |file, tuple|
+        if tuple.getDate.eql? date
+          puts "#{date} [#{tuple.getCommit}]: #{file}" +
+                " " * ($longest - file.length + 1) +
+                "(#{tuple.getAuthor})"
+        end
       end
     end
-  end
 end
 
 if(ARGV.length > 1)
@@ -66,7 +68,6 @@ else
     target_path = target_path + "/" + ARGV[0]
   end
 
-  system("cd #{target_path}")
   traverse(target_path)
   print_hash
 end
